@@ -1,0 +1,68 @@
+import { ErrorRequestHandler } from "express";
+import { envVars } from "../../config/env";
+
+import httpStatus from "http-status-codes";
+import {
+  errorSources,
+  handleDuplicateError,
+  handleZodValidatonError,
+  validationError,
+} from "../helper/errorHelperFunc";
+import { AppError } from "../Error/appError";
+
+export const globalErrorHandler: ErrorRequestHandler = (
+  error,
+  req,
+  res,
+  next
+) => {
+  if (envVars.NODE_ENV === "development") {
+    console.log(error);
+  }
+
+  let statusCode = 500;
+  let message = `Something went wrong !`;
+
+  //Duplicate Error
+  if (error.code === 11000) {
+    const dupFunc = handleDuplicateError(error);
+    statusCode = dupFunc.statusCode;
+    message = dupFunc.message;
+  }
+
+  // Invalid Object ID Error
+  else if (error.name === "CastError") {
+    message = "Invalid MongoDB ObjectID. Please provide valid ID.";
+  }
+
+  //Validator Error
+  else if (error.name === "ValidationError") {
+    validationError(error);
+  }
+
+  //Zod Error
+  if (error.name === "ZodError") {
+    message = handleZodValidatonError(error).message;
+    statusCode = httpStatus.NOT_ACCEPTABLE;
+  }
+
+  //
+  else if (error instanceof AppError) {
+    statusCode = error.statusCode;
+    message = error.message;
+  } else if (error instanceof Error) {
+    statusCode = 500;
+    message = error.message;
+  }
+  res.status(statusCode).json({
+    success: false,
+    message,
+    error:
+      envVars.NODE_ENV === "development"
+        ? errorSources.length > 0
+          ? errorSources
+          : error
+        : null,
+    stack: envVars.NODE_ENV === "development" ? error.stack : null,
+  });
+};
