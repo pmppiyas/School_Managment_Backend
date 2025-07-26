@@ -29,6 +29,7 @@ export interface IStudent {
   name: string;
   class?: IClass;
   section?: ISection;
+  roll?: number;
   phone?: IPhone[];
   email?: string;
   fatherName?: string;

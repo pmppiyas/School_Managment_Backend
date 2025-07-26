@@ -36,6 +36,8 @@ const studentSchema = new Schema<IStudent>(
       enum: Object.values(ISection),
     },
 
+    roll: { type: Number },
+
     phone: {
       type: [phoneSchema],
       default: [],
