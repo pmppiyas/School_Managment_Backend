@@ -24,3 +24,32 @@ const startServer = async () => {
 };
 
 startServer();
+
+const shutdown = (reason: string, error?: Error) => {
+  console.error(`${reason} → Shutting down...`, error || "");
+  if (server) {
+    server.close(() => {
+      process.exit(1);
+    });
+  } else {
+    process.exit(1);
+  }
+};
+
+process.on("unhandledRejection", (error: unknown) => {
+  const normalizedError =
+    error instanceof Error ? error : new Error("Unknown error occurred");
+  shutdown("🔴 Unhandled Rejection Detected", normalizedError);
+});
+
+process.on("uncaughtException", (error) => {
+  shutdown("🔴 Uncaught Exception Detected", error);
+});
+
+process.on("SIGTERM", () => {
+  shutdown("🟡 SIGTERM signal received");
+});
+
+process.on("SIGINT", () => {
+  shutdown("🟡 SIGINT signal received (Ctrl+C)");
+});
