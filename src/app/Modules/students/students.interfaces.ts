@@ -26,6 +26,7 @@ export interface IAuthProvider {
 }
 
 export interface IStudent {
+  _id?: string;
   name: string;
   class?: IClass;
   section?: ISection;
@@ -40,7 +41,7 @@ export interface IStudent {
   bloodGroup?: string;
   isRemoved?: boolean;
   isVerified?: boolean;
-  auth: IAuthProvider[];
+  auths: IAuthProvider[];
   monthlyFee?: Types.ObjectId[];
   feedBack?: Types.ObjectId[];
 }

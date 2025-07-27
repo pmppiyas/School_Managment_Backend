@@ -8,7 +8,7 @@ import {
 
 const phoneSchema = new Schema<IStudent["phone"]>(
   {
-    who: { type: String, required: true },
+    who: { type: String },
     number: { type: String, required: true },
   },
   { _id: false }
@@ -73,7 +73,7 @@ const studentSchema = new Schema<IStudent>(
       default: false,
     },
 
-    auth: {
+    auths: {
       type: [authSchema],
       default: [],
     },

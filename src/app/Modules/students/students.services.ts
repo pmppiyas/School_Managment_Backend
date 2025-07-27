@@ -1,12 +1,16 @@
 import { IAuthProvider, IStudent } from "./students.interfaces";
 import { Student } from "./students.model";
 import { hashingPassword } from "../../utils/hashingPassword";
-
+import { AppError } from "../../Error/appError";
+import httpStatus from "http-status-codes";
 const createStudent = async (payload: Partial<IStudent>) => {
-  const { name, password, ...rest } = payload;
+  const { name, ...rest } = payload;
 
-  if (!password) {
-    throw new Error("Password is required for student creation");
+  if (!payload.password) {
+    throw new AppError(
+      httpStatus.NOT_ACCEPTABLE,
+      "Password is required for student creation"
+    );
   }
 
   const authProvider: IAuthProvider = {
@@ -15,14 +19,27 @@ const createStudent = async (payload: Partial<IStudent>) => {
   };
 
   const student = await Student.create({
-    name,
-    password: await hashingPassword(password as string),
-    auths: [authProvider],
     ...rest,
+    password: await hashingPassword(payload.password as string),
+    auths: [authProvider],
+    payload,
   });
+
   return student;
 };
 
+const getAllStudents = async () => {
+  const students = await Student.find({});
+  const totalStudent = await Student.countDocuments();
+
+  return {
+    students,
+    meta: {
+      total: totalStudent,
+    },
+  };
+};
 export const StudentServices = {
   createStudent,
+  getAllStudents,
 };
