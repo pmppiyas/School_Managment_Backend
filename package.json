@@ -2,6 +2,7 @@
   "name": "backend_school_management",
   "version": "1.0.0",
   "main": "index.js",
+  "types": "modules",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,7 +24,8 @@
     "typescript-eslint": "^8.38.0"
   },
   "dependencies": {
-    "bcryptjs": "^3.0.2",
+    "@types/bcrypt": "^6.0.0",
+    "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",

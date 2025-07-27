@@ -6,8 +6,6 @@ import statusCode from "http-status-codes";
 
 const createStudent = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.body);
-
     const student = await StudentServices.createStudent(req.body);
 
     sendResponse(res, {
@@ -34,7 +32,7 @@ const getAllStudents = catchAsync(
 
 const getSingleStudnet = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const studentId = req.params.Id;
+    const studentId = req.params.id;
     const student = await StudentServices.getSingleStudent(studentId);
 
     sendResponse(res, {
@@ -45,8 +43,24 @@ const getSingleStudnet = catchAsync(
     });
   }
 );
+
+const updateStudent = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const studentId = req.params.id;
+
+    const result = await StudentServices.updateStudent(studentId, req.body);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: statusCode.OK,
+      message: "Student update successfully.",
+      data: result,
+    });
+  }
+);
 export const StudentController = {
   createStudent,
   getAllStudents,
   getSingleStudnet,
+  updateStudent,
 };

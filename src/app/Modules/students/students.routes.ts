@@ -5,6 +5,6 @@ const router = Router();
 
 router.post("/create", StudentController.createStudent);
 router.get("/", StudentController.getAllStudents);
-router.get("/:Id", StudentController.getSingleStudnet);
-
+router.get("/:id", StudentController.getSingleStudnet);
+router.patch("/update/:id", StudentController.updateStudent);
 export const StudentRoutes = router;
