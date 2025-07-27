@@ -32,7 +32,21 @@ const getAllStudents = catchAsync(
   }
 );
 
+const getSingleStudnet = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const studentId = req.params.Id;
+    const student = await StudentServices.getSingleStudent(studentId);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: statusCode.OK,
+      message: "Single studnet retrieved successfully.",
+      data: student,
+    });
+  }
+);
 export const StudentController = {
   createStudent,
   getAllStudents,
+  getSingleStudnet,
 };

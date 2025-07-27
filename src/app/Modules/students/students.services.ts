@@ -39,7 +39,13 @@ const getAllStudents = async () => {
     },
   };
 };
+
+const getSingleStudent = async (studentId: string) => {
+  return await Student.findById(studentId);
+};
+
 export const StudentServices = {
   createStudent,
   getAllStudents,
+  getSingleStudent,
 };
